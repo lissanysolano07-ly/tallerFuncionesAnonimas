@@ -4,25 +4,29 @@
 
 Este repositorio desarrolla las cinco partes de la guía de consulta. Los ejemplos utilizan diez productos inventados de una tienda; no representan datos reales.
 
-## Parte 1. Programación funcional en el mundo real
+## Parte 1 – Explorar: la programación funcional en el mundo real
 
 **Caso 1: Apache Spark.** Spark permite procesar grandes volúmenes de información distribuyendo tareas entre equipos. Ofrece APIs en Scala, Java y Python, y operaciones como `filter` y `map`, que permiten expresar transformaciones sobre conjuntos de datos sin escribir manualmente los bucles de procesamiento distribuido. Por ejemplo, en Scala `datos.filter(x => x > 10)` conserva los valores mayores que diez. La ventaja es expresar una regla de transformación de forma breve y reutilizable. **Fuente:** [Apache Spark: RDD Programming Guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html).
 
 **Caso 2: pandas (Python).** pandas se usa para limpiar, transformar y analizar tablas de datos, por ejemplo, registros de ventas. Su método `DataFrame.assign` permite construir columnas con funciones que reciben el DataFrame; `df.assign(total=lambda tabla: tabla.precio * tabla.cantidad)` calcula el total por fila. La ventaja es describir cálculos sobre columnas sin recorrer filas una por una. **Fuente:** [pandas.DataFrame.assign](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.assign.html). Estos fragmentos son ejemplos ilustrativos basados en las APIs documentadas, no copias de repositorios.
 
-## Parte 2. ¿Qué es una función anónima?
+## Parte 2 – Entender: ¿qu´e es una funci´on an´onima?
 
+## ¿Qué es una función anónima y de dónde viene el nombre lambda? 
 Una **función anónima** es una función que puede escribirse sin asignarle un nombre. La palabra *lambda* viene del cálculo lambda, un sistema matemático para representar funciones y aplicaciones de funciones. En Scala, `x => x * 2` recibe un número y devuelve su doble.
 
+## ¿En qué se diferencia de una función nombrada? Escribe la misma lógica de ambas forma
 Una **función nombrada** tiene un identificador: `def doble(x: Int): Int = x * 2`. La misma lógica como función anónima es `val dobleLambda = (x: Int) => x * 2`. Las dos producen `6` al recibir `3`.
 
+## ¿Qué significa que las funciones sean ciudadanos de primera clase? ¿Por qué eso permite pasar una lambda a map o filter?
 Las funciones son **ciudadanos de primera clase** cuando pueden guardarse en variables, pasarse como argumentos y devolverse desde otras funciones. Por eso `List(1, 2, 3).map(x => x * 2)` puede recibir la lambda y devolver `List(2, 4, 6)`. En `filter`, la lambda debe devolver un valor booleano.
 
+## ¿Qué es un closure? Muestra una lambda que use una variable definida fuera de ella
 Un **closure** es una función que utiliza variables de su entorno exterior. Ejemplo: `val impuesto = 0.15; val total = (precio: Double) => precio * (1 + impuesto)`. La función utiliza `impuesto` aunque no sea un parámetro suyo.
 
-## Parte 3. Tipos de problemas
 
-Se resolvieron los **siete tipos** propuestos, con los mismos diez productos en Scala, Java y Python. Cada caso se ejecuta en los tres lenguajes. Archivos: [`scala/Parte3.scala`](scala/Parte3.scala), [`java/Parte3.java`](java/Parte3.java) y [`python/parte3.py`](python/parte3.py).
+## Parte 3. Aplicar: ¿en qué problemas sirven las funciones anónimas?
+
 
 | Tipo | Situación real | Operación y criterio | Resultado esperado en los tres lenguajes |
 |---|---|---|---|
@@ -34,9 +38,9 @@ Se resolvieron los **siete tipos** propuestos, con los mismos diez productos en 
 | Aplanamiento | Unir palabras de nombres en una sola lista | `flatMap` o equivalente | 10 palabras, una por producto |
 | Acumulación | Calcular el valor monetario total de las existencias | `foldLeft` o `reduce` | 12235 |
 
-Las lambdas concretas y las salidas impresas están en los archivos de código. Las versiones usan `filter`, `map`, `exists`/`anyMatch`/`any`, `count`, `maxBy`/`max`, `flatMap` y `foldLeft`/`reduce` según las herramientas disponibles en cada lenguaje. **Nota:** en Java, `reduce` combina resultados parciales mediante `Integer::sum`.
 
-## Parte 4. Cuatro operaciones nuevas
+
+## Parte 4. Ampliar: cuatro operaciones nuevas
 
 Archivo: [`operaciones/Parte4.scala`](operaciones/Parte4.scala). Todas las operaciones usan los productos anteriores.
 

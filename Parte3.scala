@@ -1,4 +1,4 @@
-// Parte 3: siete tipos de problemas con funciones anonimas.
+
 case class Producto(nombre: String, categoria: String, precio: Int, stock: Int)
 val productos = List(
   Producto("Laptop", "Tecnologia", 850, 8),

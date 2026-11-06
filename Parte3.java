@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.stream.*;
 
-// Ejecutar con Java 17 o superior: javac Parte3.java && java Parte3
+
 public class Parte3 {
   record Producto(String nombre, String categoria, int precio, int stock) {}
   public static void main(String[] args) {
