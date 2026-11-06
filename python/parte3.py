@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from functools import reduce
+from dataclasses import dataclass //dataclass: permite crear una clase para almacenar datos sin tener que escribir un constructor
+from functools import reduce //reduce: permite recorrer una colección y acumular sus valores hasta obtener un solo resultado.
 
 @dataclass
 class Producto:

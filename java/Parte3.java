@@ -3,9 +3,11 @@ import java.util.stream.*;
 
 
 public class Parte3 {
+  //record: crear objetos sin tener que escribir el constructor 
   record Producto(String nombre, String categoria, int precio, int stock) {}
   public static void main(String[] args) {
     List<Producto> productos = List.of(
+      //List.of(): crea una lista que no permite agregar ni eliminar elementos.
       new Producto("Laptop", "Tecnologia", 850, 8),
       new Producto("Mouse", "Tecnologia", 20, 30),
       new Producto("Teclado", "Tecnologia", 45, 15),

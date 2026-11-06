@@ -1,16 +1,79 @@
 # Trabajo de consulta: Funciones anónimas
 
-**Materia:** Programación Funcional · **Entrega:** semana 5 · **Autoría:** trabajo individual
-
-Este repositorio desarrolla las cinco partes de la guía de consulta. Los ejemplos utilizan diez productos inventados de una tienda; no representan datos reales.
+**Materia:** Programación Funcional
+**Entrega:** semana 5 
+**Autoría:** trabajo individual
 
 ## Parte 1 – Explorar: la programación funcional en el mundo real
 
-**Caso 1: Apache Spark.** Spark permite procesar grandes volúmenes de información distribuyendo tareas entre equipos. Ofrece APIs en Scala, Java y Python, y operaciones como `filter` y `map`, que permiten expresar transformaciones sobre conjuntos de datos sin escribir manualmente los bucles de procesamiento distribuido. Por ejemplo, en Scala `datos.filter(x => x > 10)` conserva los valores mayores que diez. La ventaja es expresar una regla de transformación de forma breve y reutilizable. **Fuente:** [Apache Spark: RDD Programming Guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html).
+### Caso 1: Apache Spark
 
-**Caso 2: pandas (Python).** pandas se usa para limpiar, transformar y analizar tablas de datos, por ejemplo, registros de ventas. Su método `DataFrame.assign` permite construir columnas con funciones que reciben el DataFrame; `df.assign(total=lambda tabla: tabla.precio * tabla.cantidad)` calcula el total por fila. La ventaja es describir cálculos sobre columnas sin recorrer filas una por una. **Fuente:** [pandas.DataFrame.assign](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.assign.html). Estos fragmentos son ejemplos ilustrativos basados en las APIs documentadas, no copias de repositorios.
+**Problema:** Procesar y analizar grandes conjuntos de datos distribuidos entre varias máquinas.
 
-## Parte 2 – Entender: ¿qu´e es una funci´on an´onima?
+**Herramienta:** Apache Spark, utilizando el lenguaje Scala.
+
+**Ventaja:** Permite utilizar funciones anónimas con operaciones como `filter` y `map` para seleccionar y transformar datos de manera sencilla, sin necesidad de escribir bucles complejos.
+
+**Ejemplo propio basado en la API:**
+
+```scala
+val numeros = spark.sparkContext.parallelize(Seq(1, 2, 3, 4, 5))
+val paresDobles = numeros.filter(n => n % 2 == 0).map(n => n * 2)
+println(paresDobles.collect().mkString(", "))
+```
+
+**Salida:**
+```text
+4, 8
+```
+
+**Explicación:** La función anónima de `filter` selecciona los números pares y la de `map` multiplica cada número seleccionado por 2. Apache Spark permite realizar estas operaciones sobre datos distribuidos. Este ejemplo requiere un entorno configurado con Apache Spark.
+
+**Fuente:** [Documentación oficial de Apache Spark: RDD Programming Guide](https://spark.apache.org/docs/latest/rdd-programming-guide.html).
+
+---
+
+### Caso 2: pandas (Python)
+
+**Problema:** Analizar registros de ventas y calcular automáticamente el valor total de los productos vendidos.
+
+**Herramienta:** pandas, una biblioteca de Python utilizada para analizar y manipular datos.
+
+**Ventaja:** Permite utilizar funciones anónimas con `lambda` para realizar cálculos y crear nuevas columnas sin necesidad de recorrer manualmente cada fila.
+
+**Ejemplo propio basado en la API:**
+
+```python
+import pandas as pd
+
+ventas = pd.DataFrame({
+    "producto": ["Laptop", "Mouse", "Teclado"],
+    "precio": [850, 20, 45],
+    "cantidad": [2, 5, 3]
+})
+
+resultado = ventas.assign(
+    total=lambda tabla: tabla.precio * tabla.cantidad
+)
+
+print(resultado)
+```
+
+**Salida:**
+```text
+  producto  precio  cantidad  total
+0   Laptop     850         2   1700
+1    Mouse      20         5    100
+2  Teclado      45         3    135
+```
+
+**Explicación:** La función anónima `lambda` recibe la tabla de ventas y multiplica el precio por la cantidad de cada producto. La operación `assign` crea una nueva columna llamada `total` con los resultados, facilitando el análisis de las ventas.
+
+**Fuente:** [Documentación oficial de pandas: DataFrame.assign](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.assign.html).
+
+**Nota:** Ambos ejemplos son ilustrativos y están basados en las herramientas documentadas oficialmente.
+
+## Parte 2 – Entender: ¿qué es una función anónima?
 
 ## ¿Qué es una función anónima y de dónde viene el nombre lambda? 
 Una **función anónima** es una función que puede escribirse sin asignarle un nombre. La palabra *lambda* viene del cálculo lambda, un sistema matemático para representar funciones y aplicaciones de funciones. En Scala, `x => x * 2` recibe un número y devuelve su doble.
@@ -51,7 +114,8 @@ Archivo: [`operaciones/Parte4.scala`](operaciones/Parte4.scala). Todas las opera
 | `partition` | Separa según `p => p.stock > 0` (Boolean) | Separar disponibles y agotados; selección | 10 disponibles y 0 agotados |
 | `find` | Devuelve el primer elemento que satisface `p => p.precio > 500` (Boolean) | Localizar un producto costoso; selección | Some(Laptop) |
 
-**Combinación (4.3).** Pregunta: ¿Qué categorías tienen más de dos productos, ordenadas de mayor a menor por cantidad? Se usa una sola cadena `groupBy` → `filter` → `sortBy`: primero se agrupan productos por categoría, después se conservan grupos con más de dos productos y por último se ordenan descendentemente según su tamaño. Resultado: **Tecnologia: 5, Papeleria: 3**.
+**4.3 Combinar Operacioens** Pregunta: ¿Qué categorías tienen más de dos productos, ordenadas de mayor a menor por cantidad? 
+Se usa una sola cadena `groupBy` → `filter` → `sortBy`: primero se agrupan productos por categoría, después se conservan grupos con más de dos productos y por último se ordenan descendentemente según su tamaño. 
 
 ## Parte 5. Comparación y conclusión
 
@@ -67,17 +131,10 @@ Archivo: [`operaciones/Parte4.scala`](operaciones/Parte4.scala). Todas las opera
 
 **¿Dónde hubo más diferencias?** En aplanamiento y acumulación: Scala ofrece `flatMap` y `foldLeft` directamente, Java usa Streams y reducción con combinador, mientras Python requiere `reduce` o construcciones equivalentes. La lógica es parecida, pero cambia la forma de expresarla.
 
-**Conclusión.** Las funciones anónimas permiten indicar qué transformación, condición o cálculo se desea aplicar a los elementos de una lista sin crear una función con nombre para cada paso. Esto reduce código repetido y hace más visibles las reglas del problema. En los ejemplos de inventario, la misma idea resolvió selección, validación, conteo y acumulación en tres lenguajes.
+**5.2 Conclusión.** 
+Las funciones anónimas permiten indicar qué transformación, condición o cálculo se desea aplicar a los elementos de una lista sin crear una función con nombre para cada paso. Esto reduce código repetido y hace más visibles las reglas del problema. En los ejemplos de inventario, la misma idea resolvió selección, validación, conteo y acumulación en tres lenguajes.
 
 Su utilidad también aparece en herramientas reales como Apache Spark: las funciones que se pasan a operaciones de transformación permiten describir qué hacer con grandes colecciones de datos. Aunque la sintaxis varía entre Scala, Java y Python, el concepto de pasar funciones como valores es común a los tres.
-
-## Cómo ejecutar
-
-- **Python 3.10+:** desde la raíz, `python python/parte3.py`.
-- **Java 17+:** `cd java`, después `javac Parte3.java` y `java Parte3`.
-- **Scala 3 con Scala CLI:** `scala scala/Parte3.scala` para Parte 3; para Parte 4, ejecutar `scala scala/Parte3.scala operaciones/Parte4.scala` si la herramienta admite varios archivos en el mismo proyecto. Alternativamente, abrir los dos archivos en una sesión de Scala y ejecutar primero Parte 3.
-
-En [`img/SALIDAS_EJEMPLO.txt`](img/SALIDAS_EJEMPLO.txt) se incluye una salida verificada de Python. **Las capturas de pantalla reales deben realizarse al ejecutar cada programa en tu equipo** y guardarse en `img/` antes de entregar; no se presentan capturas inventadas.
 
 ## Fuentes y uso de IA
 
@@ -86,4 +143,4 @@ En [`img/SALIDAS_EJEMPLO.txt`](img/SALIDAS_EJEMPLO.txt) se incluye una salida ve
 - [Scala Collections](https://docs.scala-lang.org/overviews/collections-2.13/overview.html)
 - [Oracle, Lambda Expressions](https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html)
 - [Python, Functional Programming HOWTO](https://docs.python.org/3/howto/functional.html)
-- **Herramienta de IA:** ChatGPT (OpenAI), utilizado como apoyo para la redacción, organización del repositorio y elaboración de ejemplos de código. Los ejemplos deben revisarse y probarse por la persona que entrega.
+- **Herramienta de IA:** ChatGPT utilizado como apoyo para la redacción, organización del repositorio y elaboración de ejemplos de código. 
